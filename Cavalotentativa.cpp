@@ -10,15 +10,15 @@ int contadorDePassos = 1;
 const int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
 const int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
 
-// FunÁ„o para verificar se uma determinada posiÁ„o È v·lida no tabuleiro
+// Fun√ß√£o para verificar se uma determinada posi√ß√£o √© v√°lida no tabuleiro
 bool isSafe(int x, int y, std::vector<std::vector<int>>& board) {
     return (x >= 0 && y >= 0 && x < 8 && y < 8 && board[x][y] == -1);
 }
 
-// FunÁ„o recursiva para realizar o Passeio do Cavalo
+// Fun√ß√£o recursiva para realizar o Passeio do Cavalo
 bool knightTour(int x, int y, int moveCount, std::vector<std::vector<int>>& board) {
     if (moveCount == 8 * 8) {
-        // Todas as cÈlulas foram visitadas, ou seja, temos uma soluÁ„o v·lida
+        // Todas as c√©lulas foram visitadas, ou seja, temos uma solu√ß√£o v√°lida
         return true;
     }
 
@@ -30,7 +30,7 @@ bool knightTour(int x, int y, int moveCount, std::vector<std::vector<int>>& boar
             board[nextX][nextY] = moveCount;
             if (knightTour(nextX, nextY, moveCount + 1, board)) {
                 contadorDePassos = contadorDePassos + 1;
-                // Se a prÛxima chamada recursiva retorna true, ent„o encontramos uma soluÁ„o
+                // Se a pr√≥xima chamada recursiva retorna true, ent√£o encontramos uma solu√ß√£o
                 return true;
             }
             board[nextX][nextY] = -1; // Backtracking: desfaz o movimento
@@ -38,17 +38,29 @@ bool knightTour(int x, int y, int moveCount, std::vector<std::vector<int>>& boar
         }
     }
 
-    return false; // Nenhuma soluÁ„o a partir desta posiÁ„o
+    return false; // Nenhuma solu√ß√£o a partir desta posi√ß√£o
 }
 
-// FunÁ„o para iniciar o Passeio do Cavalo
+// Fun√ß√£o para iniciar o Passeio do Cavalo
 void solveKnightTour(int startX, int startY) {
     vector<vector<int>> board(8, vector<int>(8, -1));
-    board[startX][startY] = 0; // Marcar a posiÁ„o inicial como visitada
+    board[startX][startY] = 0; // Marcar a posi√ß√£o inicial como visitada
     int moveCount = 1;
 
     if (knightTour(startX, startY, 1, board)) {
-        // Imprimir o tabuleiro com a soluÁ„o
+        // Imprimir o tabuleiro com a solu√ß√£o
+        bool isAdjacentToStart = false;
+        for (int i = 0; i < 8; ++i) {
+            int finalX = startX + dx[i];
+            int finalY = startY + dy[i];
+            if (finalX >= 0 && finalX < 8 && finalY >= 0 && finalY < 8) {
+                if (board[finalX][finalY] == 64) { // 8x8 = 64
+                    isAdjacentToStart = true;
+                    break;
+                }
+            }
+        }
+        
         cout << "Solucao encontrada:\n";
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
@@ -56,7 +68,12 @@ void solveKnightTour(int startX, int startY) {
             }
             cout << "\n";
         }
-        cout << "Total de passos: " << contadorDePassos << std::endl;
+        cout << "\nTotal de passos: " << contadorDePassos << std::endl;
+        if (isAdjacentToStart) {
+            cout << "\nMovimentacao do cavalo: Fechada" << endl;
+        } else {
+            cout << "\nMovimentacao do cavalo: Aberta" << endl;
+        }
     } else {
         cout << "Nao foi possivel encontrar uma solucao a partir da posicao inicial.\n";
     }
@@ -64,10 +81,8 @@ void solveKnightTour(int startX, int startY) {
 
 int main() {
     int startX, startY;
-    cout << "Digite a posicao inicial do cavalo (linha): ";
-    cin >> startX ;
-    cout << "Digite a posicao inicial do cavalo (coluna): ";
-    cin >> startY;
+    startX = 0;
+    startY = 7;
 
     if (startX < 0 || startY < 0 || startX >= 8 || startY >= 8) {
         cout << "Posicao inicial invalida. As coordenadas devem estar entre 0 e " << 8-1 << ".\n";
@@ -78,7 +93,7 @@ int main() {
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
-    // Imprime o tempo de execuÁ„o em milissegundos
+    // Imprime o tempo de execu√ß√£o em milissegundos
     cout << "\nTempo de execucao: " << duration.count() << " ms" << std::endl;
 
 
